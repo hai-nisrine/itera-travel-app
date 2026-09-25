@@ -7,7 +7,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 CREATE TABLE accessibility_profiles (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL,
