@@ -1,11 +1,7 @@
-export default function AuthLayout({ heroSide = 'right', children }) {
+export default function AuthLayout({ heroSide = 'right', heroImage, children }) {
   const hero = (
-    <div className={`hero-art ${heroSide === 'right' ? 'hero-city' : 'hero-desert'}`}>
-      <div className="hero-caption">
-        Your Adventure
-        <br />
-        Starts <span className="accent">Here</span>
-      </div>
+    <div className={`hero-art ${heroImage ? '' : heroSide === 'right' ? 'hero-city' : 'hero-desert'}`}>
+      {heroImage && <img className="hero-photo" src={heroImage} alt="" />}
     </div>
   )
   const form = <div className="auth-form-wrap">{children}</div>

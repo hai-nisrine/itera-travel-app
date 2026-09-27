@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PageShell from '../components/PageShell.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 
 export const OPTIONS = [
@@ -27,10 +28,9 @@ export default function AccessibilityProfile() {
   }
 
   return (
-    <div>
+    <PageShell>
       <div className="a11y-banner">
         <div className="inner">
-          <div className="step">Welcome to Itera · Step 1 of 3</div>
           <h1>Set up your accessibility profile</h1>
           <p>Tell us what you need to travel comfortably. We'll use it to rank every trip you see.</p>
         </div>
@@ -38,7 +38,7 @@ export default function AccessibilityProfile() {
 
       <div className="a11y-body">
         <div className="card">
-          <legend>Accommodation &amp; accessibility needs</legend>
+          <legend className="card-legend">Accommodation &amp; accessibility needs</legend>
           <p className="sub">Select all that apply. Only shared with organizers when you book.</p>
 
           {OPTIONS.map((opt) => (
@@ -59,17 +59,17 @@ export default function AccessibilityProfile() {
             </div>
           ))}
 
-          <div className="field" style={{ marginTop: 16 }}>
+          <div className="field" style={{ marginTop: 20 }}>
             <label>Additional info or notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Need step-free van transfers and a ground-floor room"
+              placeholder="e.g. Need step-free van transfers and ground-floor room with roll-in shower"
             />
           </div>
 
           <button className="save-btn" disabled={loading} onClick={handleSave}>
-            {loading ? 'Saving…' : 'Save & Explore Trips'}
+            {loading ? 'Saving…' : <>Save &amp; Explore Trips <span aria-hidden="true">→</span></>}
           </button>
         </div>
 
@@ -79,6 +79,6 @@ export default function AccessibilityProfile() {
           <p>Interactive prototype — all trips and data are simulated.</p>
         </div>
       </div>
-    </div>
+    </PageShell>
   )
 }
