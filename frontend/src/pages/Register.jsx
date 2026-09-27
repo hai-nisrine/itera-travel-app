@@ -7,14 +7,14 @@ import { useAuth } from '../context/AuthContext.jsx'
 export default function Register() {
   const { register, loading, error } = useAuth()
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
+  const [phone_number, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
 
   async function handleSubmit(e) {
     e.preventDefault()
-    const res = await register({ username, email, phone, password })
+    const res = await register({ name, email, phone_number, password })
     if (res.ok) navigate('/accessibility-profile')
   }
 
@@ -27,7 +27,7 @@ export default function Register() {
 
         <div className="field">
           <label>Username</label>
-          <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Your name" />
+          <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your username" />
         </div>
         <div className="field">
           <label>Email</label>
@@ -35,7 +35,7 @@ export default function Register() {
         </div>
         <div className="field">
           <label>Phone number</label>
-          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+212 6 12 34 56 78" />
+          <input type="tel" value={phone_number} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="+212 6 12 34 56 78" />
         </div>
         <div className="field">
           <label>Password</label>
