@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import pool from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
-import profileRoutes from './routes/profileRoutes.js';
+
 
 dotenv.config();
 
