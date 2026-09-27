@@ -10,6 +10,12 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+pool.query('SELECT NOW()').then(result => {
+    console.log('PostgreSQL connected:', result.rows[0]);
+}) 
+.catch(error => {
+    console.error('Database connection error:', error);
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`)
