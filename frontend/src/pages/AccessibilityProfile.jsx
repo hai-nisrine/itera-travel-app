@@ -26,9 +26,21 @@ export default function AccessibilityProfile() {
   }
 
   async function handleSave() {
-    const res = await saveProfile({ selected, notes })
-    if (res.ok) navigate('/dashboard')
+  const profile = {
+    wheelchair_mobility_accessible: selected.includes('wheelchair'),
+    visual_assistance: selected.includes('visual'),
+    deaf_sign_support: selected.includes('hearing'),
+    sensory_friendly: selected.includes('sensory'),
+    trained_personal_assistant: selected.includes('helper'),
+    service_animal_support: selected.includes('serviceAnimal'),
+    medical_equipment_storage: selected.includes('medicalEquipment'),
+    additional_info: notes
   }
+
+  const res = await saveProfile(profile)
+
+  if (res.ok) navigate('/dashboard')
+}
 
   return (
     <PageShell>
