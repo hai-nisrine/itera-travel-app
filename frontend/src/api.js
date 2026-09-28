@@ -24,14 +24,21 @@ export async function login({ email, password }) {
   return { ok: true, user: data.user }
 }
 
-export async function saveProfile(email, profile) {
+export async function saveProfile(profile) {
   const token = localStorage.getItem('token')
-  const res = await fetch(`${API_BASE}/api/profile`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ profile }),
+
+  const res = await fetch(`${API_BASE}/api/accessibility`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(profile),
   })
+
   const data = await res.json()
+
   if (!res.ok) return { ok: false, error: data.error }
-  return { ok: true, user: data.user }
+
+  return { ok: true, profile: data.profile }
 }
