@@ -9,6 +9,9 @@ export const OPTIONS = [
   { id: 'hearing', label: 'Deaf / Hard of hearing / Sign support', desc: 'Sign interpreters, captioned briefings' },
   { id: 'sensory', label: 'Neurodivergent / Sensory-friendly', desc: 'Quiet spaces, predictable pacing' },
   { id: 'helper', label: 'Trained personal helpers', desc: '1:1 or shared trained assistants' },
+  { id: 'serviceAnimal', label:'Service Animal Support', desc:'Support and accommodation for trained service animals'},
+  { id: 'medicalEquipment', label:'Medical Equipment & Storage', desc: 'Storage, charging, and refrigeration for medical equipment'}
+
 ]
 
 export default function AccessibilityProfile() {
