@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import pool from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
+import accessibilityRoutes from './routes/accessibilityRoutes.js';
 
 
 dotenv.config();
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/accessibility', accessibilityRoutes); //we use /api to clarify that this URL is for backend functions not frontend like displaying a page
 pool.query('SELECT NOW()').then(result => {
     console.log('PostgreSQL connected:', result.rows[0]);
 }) 

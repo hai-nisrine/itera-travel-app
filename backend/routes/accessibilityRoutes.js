@@ -1,6 +1,6 @@
 import express from 'express';
 import { saveProfile } from '../controllers/accessibilityController.js';
-import { authenticate } from '../middleware/authMiddleware.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
