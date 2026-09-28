@@ -18,7 +18,6 @@ CREATE TABLE accessibility_profiles (
     trained_personal_assistant BOOLEAN DEFAULT FALSE,
     service_animal_support BOOLEAN DEFAULT FALSE,
     medical_equipment_storage BOOLEAN DEFAULT FALSE,
-
     additional_info TEXT,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
