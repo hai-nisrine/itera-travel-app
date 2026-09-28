@@ -18,8 +18,20 @@ export default function AccessibilityProfile() {
   const { user, saveProfile, loading } = useAuth()
   const navigate = useNavigate()
   const initial = user?.profile
-  const [selected, setSelected] = useState(initial ? initial.selected : [])
-  const [notes, setNotes] = useState(initial ? initial.notes : '')
+  const initialSelected = initial
+  ? [
+      initial.wheelchair_mobility_accessible && 'wheelchair',
+      initial.visual_assistance && 'visual',
+      initial.deaf_sign_support && 'hearing',
+      initial.sensory_friendly && 'sensory',
+      initial.trained_personal_assistant && 'helper',
+      initial.service_animal_support && 'serviceAnimal',
+      initial.medical_equipment_storage && 'medicalEquipment'
+    ].filter(Boolean)
+  : []
+
+const [selected, setSelected] = useState(initialSelected)
+const [notes, setNotes] = useState(initial?.additional_info || '')
 
   function toggle(id) {
     setSelected((sel) => (sel.includes(id) ? sel.filter((x) => x !== id) : [...sel, id]))
