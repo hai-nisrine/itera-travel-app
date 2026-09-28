@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import PageShell from '../components/PageShell.jsx'
 import AuthLayout from '../components/AuthLayout.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
-import loginHero from '../assets/login-hero4.jpg'
+import loginHero from '../assets/login-hero.jpg'
 
 export default function Login() {
   const { login, loading, error } = useAuth()

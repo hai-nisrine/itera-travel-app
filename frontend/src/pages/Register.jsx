@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import PageShell from '../components/PageShell.jsx'
 import AuthLayout from '../components/AuthLayout.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
-import registerHero from '../assets/login-hero5.jpg'
+import registerHero from '../assets/register-hero.jpg'
 
 const PASSWORD_RULES = [
   { key: 'length', label: 'At least 8 characters', test: (pw) => pw.length >= 8 },
