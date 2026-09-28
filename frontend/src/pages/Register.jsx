@@ -26,7 +26,10 @@ export default function Register() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!passwordValid) return
+    if (!passwordValid) {
+      setPasswordFocused(true)
+      return
+    }
     const res = await register({ name, email, phone_number, password })
     if (res.ok) navigate('/accessibility-profile')
   }
@@ -78,7 +81,7 @@ export default function Register() {
 
           {error && <p className="error-text">{error}</p>}
 
-          <button className="btn-primary" type="submit" disabled={loading || !passwordValid}>
+          <button className="btn-primary" type="submit" disabled={loading}>
             {loading ? 'Creating…' : 'Create account'}
           </button>
 
