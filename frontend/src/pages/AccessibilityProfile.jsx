@@ -102,8 +102,7 @@ const [notes, setNotes] = useState(initial?.additional_info || '')
 
         <div className="brand-footer">
           <div className="wordmark">itera</div>
-          <p>Itera: Find. Join. Explore. Accessible group travel across Morocco.</p>
-          <p>Interactive prototype — all trips and data are simulated.</p>
+          <p>Itera: Type. Accept. Enjoy. Accessible group travel across Morocco.</p>
         </div>
       </div>
     </PageShell>
