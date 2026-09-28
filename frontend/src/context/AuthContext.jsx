@@ -30,9 +30,15 @@ export function AuthProvider({ children }) {
 
   async function saveProfile(profile) {
     setLoading(true)
-    const res = await api.saveProfile(user.email, profile)
+    const res = await api.saveProfile(profile)
     setLoading(false)
-    if (res.ok) setUser(res.user)
+    
+    if(res.ok) {
+      setUser({
+        ...user,
+        profile: res.profile
+      })
+    }
     return res
   }
 
