@@ -1,8 +1,6 @@
 
 name: Itera CI
 
-# Trigger CI whenever code is pushed
-# or a Pull Request is opened or updated.
 on:
   push:
   pull_request:
@@ -11,14 +9,38 @@ permissions:
   contents: read
 
 jobs:
-  backend-tests:
+
+  frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+  backend:
+    name: Test Backend
     runs-on: ubuntu-latest
 
     defaults:
       run:
         working-directory: backend
 
-    # Create a temporary PostgreSQL database for testing.
     services:
       postgres:
         image: postgres:16
@@ -42,30 +64,16 @@ jobs:
       DB_NAME: itera_test
 
     steps:
-      # Get the repository code
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # Install Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: backend/package-lock.json
 
-      # Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # Build the application if a build script exists
-      - name: Build application
-        run: npm run build --if-present
-
-      # Initialize database schema if a migration script exists
-      - name: Initialize database
-        run: npm run migrate --if-present
-
-      # Run automated tests
       - name: Run tests
         run: npm test
