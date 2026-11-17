@@ -3,10 +3,15 @@ const fixtures = JSON.parse(fs.readFileSync(new URL('./data/Itera_PoC_15_Trips_1
 export const trips = fixtures.agency_trip_listings;
 export const travelers = fixtures.travelers;
 const mapping = {wheelchair:'wheelchair_access',accessible_bathroom:'accessible_bathroom',step_free_transport:'step_free_transport',needs_assistance:'assistance_available'};
-const day = s => Date.parse(s+'T00:00:00Z')/86400000;
+export function validDate(value){
+ if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+ const date=new Date(value+'T00:00:00Z');
+ return Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value;
+}
+const day = s => validDate(s)?Date.parse(s+'T00:00:00Z')/86400000:NaN;
 export function eligible(t,p){
- if(!p || !p.needs || !Number.isFinite(p.budget_max_mad) || !p.available_from || !p.available_to || !Number.isInteger(p.max_duration_days)) return false;
- if(!Number.isFinite(t.price_mad)||t.price_mad>p.budget_max_mad||!Number.isInteger(t.duration_days)||t.duration_days>p.max_duration_days) return false;
+ if(!t || !p || !p.needs || !Number.isFinite(p.budget_max_mad) || p.budget_max_mad<0 || !p.available_from || !p.available_to || !Number.isInteger(p.max_duration_days) || p.max_duration_days<1) return false;
+ if(!Number.isFinite(t.price_mad)||t.price_mad<0||t.price_mad>p.budget_max_mad||!Number.isInteger(t.duration_days)||t.duration_days<1||t.duration_days>p.max_duration_days) return false;
  const start=day(t.start_date),from=day(p.available_from),to=day(p.available_to);
  if(![start,from,to].every(Number.isFinite)||start<from||start+t.duration_days-1>to) return false;
  if(p.departure_country_required && t.departure_country!==p.departure_country_required)return false;
