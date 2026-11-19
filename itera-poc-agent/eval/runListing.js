@@ -45,13 +45,13 @@ for (const [index, test] of selected.entries()) {
   const failuresBefore = failures.length;
 
   try {
-    // Run the conversation
+    // Run the conversationf
     const history = [];
     let first, last;
     for (const turn of test.turns) {
       history.push({ role: "user", content: turn });
       const t0 = Date.now();
-      const r = await createListing(history, { today, provider: agentProvider });
+      const r = await createListing(history, { today, provider: agentProvider, previousDraft: last?.listing ?? null });
       s.ms += Date.now() - t0; s.calls++; s.tokensIn += r.usage.input; s.tokensOut += r.usage.output;
       history.push({ role: "assistant", content: `${formatReply(r)}\nCurrent draft: ${JSON.stringify(r.listing ?? {})}` });
       first ??= r; last = r;
