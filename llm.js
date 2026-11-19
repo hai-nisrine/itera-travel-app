@@ -1,12 +1,23 @@
-export async function callLLM(messages){
- const endpoint=process.env.LLM_BASE_URL,model=process.env.LLM_MODEL,key=process.env.LLM_API_KEY;
- if(!endpoint||!model)throw Error('LLM not configured: set LLM_BASE_URL and LLM_MODEL');
- const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),30000);
- try{
-  const response=await fetch(endpoint.replace(/\/$/,'')+'/chat/completions',{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json',...(key?{'Authorization':'Bearer '+key}:{})},body:JSON.stringify({model,messages,temperature:0,response_format:{type:'json_object'}})});
-  if(!response.ok)throw Error('LLM HTTP '+response.status);
-  const data=await response.json();const content=data.choices?.[0]?.message?.content;
-  if(typeof content!=='string')throw Error('LLM response missing content');
-  return JSON.parse(content);
- }finally{clearTimeout(timeout);}
+import "dotenv/config";
+import {callGemini} from "./providers/gemini.js";
+import {callOpenAI} from "./providers/openai.js";
+
+const providers=new Map([["gemini",{call:callGemini,model:"GEMINI_MODEL"}],["openai",{call:callOpenAI,model:"OPENAI_MODEL"}]]);
+export async function callLLM({system,prompt,schema,provider=process.env.LLM_PROVIDER||"gemini"}){
+ const p=providers.get(provider);
+ if(!p)throw Error("Unknown LLM provider");
+ const messages=typeof prompt==="string"?[{role:"user",text:prompt}]:prompt;
+ if(typeof system!=="string"||!Array.isArray(messages)||!messages.length||messages.some(m=>!m||!["user","assistant"].includes(m.role)||typeof m.text!=="string")||schema?.type!=="object")throw Error("Invalid LLM request");
+ const model=process.env[p.model];
+ if(!model)throw Error("Missing "+p.model);
+ const start=Date.now();
+ let response;
+ try{response=await p.call({system,messages,schema,model});}catch(e){
+ if(/^Missing (GEMINI|OPENAI)_API_KEY$/.test(e.message))throw e;
+ throw Error(provider+" request failed"+(Number.isInteger(e.status)?" (HTTP "+e.status+")":""));
+ }
+ let data;
+ try{data=JSON.parse(response.text);}catch{throw Error(provider+" did not return valid JSON");}
+ if(!data||typeof data!=="object"||Array.isArray(data))throw Error("Invalid LLM response object");
+ return {data,usage:response.usage,provider,model,ms:Date.now()-start};
 }
