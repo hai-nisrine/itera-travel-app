@@ -1,7 +1,8 @@
 import test from 'node:test'; import assert from 'node:assert/strict'; import fs from 'node:fs';
-import {trips,travelers,filterTrips,baselineRank,validateRank} from './traveler/core.js'; 
+import {trips,travelers,filterTrips,baselineRank,validateRank} from '../traveler/core.js';
+import { recommend } from '../traveler/recommend.js';
 
-const expected = JSON.parse(fs.readFileSync(new URL('./data/Itera_PoC_Expected_Results.json', import.meta.url), 'utf8'));
+const expected = JSON.parse(fs.readFileSync(new URL('../data/Itera_PoC_Expected_Results.json', import.meta.url), 'utf8')).tests;
 
 test('fixture integrity', () => { assert.equal(trips.length, 15); assert.equal(travelers.length, 10); });
 for (const profile of travelers) {
@@ -30,4 +31,21 @@ test('rank validation rejects malformed, duplicate and excessive selections', ()
     const allowed = filterTrips(travelers[0]), id = allowed[0].id;
     for (const ids of [null, {}, [1], [id, id], [id, id, id, id], ['invented']]) assert.throws(() => validateRank(ids, allowed));
     assert.deepEqual(validateRank([id], allowed), [allowed[0]]);
+});
+
+// Mocked traveler agent tests (moved from agent.test.js)
+async function withModel(t, answer, run) {
+    const llm = async () => ({ data: structuredClone(answer), usage: { input: 0, output: 0 }, provider: 'mock', model: 'mock', ms: 0 });
+    await run(llm);
+}
+test('mocked traveler rejects ineligible or malformed model selections', async t => {
+    for (const answer of [null, { ids: ['toubkal_hike'] }, { ids: ['invented'] }]) await withModel(t, answer, (llm) => assert.rejects(recommend(travelers[0], { llm }), /invalid or ineligible/));
+});
+test('mocked traveler returns only verified eligible listings', async t => {
+    const allowed = filterTrips(travelers[0]);
+    await withModel(t, { ids: [allowed[0].id] }, async (llm) => { const r = await recommend(travelers[0], { llm }); assert.equal(r.mode, 'ai_ranked'); assert.deepEqual(r.recommendations[0].trip, allowed[0]); assert.match(r.recommendations[0].explanation, /MAD/); });
+});
+test('baseline and no-match paths need no model', async () => {
+    assert.equal((await recommend(travelers[0], { useAI: false })).mode, 'deterministic_baseline');
+    assert.deepEqual(await recommend(travelers.find(p => p.id === 'nour')), { mode: 'no_matches', recommendations: [] });
 });
