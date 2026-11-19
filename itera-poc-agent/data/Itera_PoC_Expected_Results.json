@@ -1,0 +1,95 @@
+{
+  "tests": [
+    {
+      "traveler_id": "youssef",
+      "eligible_trip_ids": [
+        "essaouira_riad",
+        "agadir_beach"
+      ]
+    },
+    {
+      "traveler_id": "salma",
+      "eligible_trip_ids": [
+        "agadir_beach",
+        "rabat_city",
+        "merzouga_assisted_desert",
+        "ouarzazate_desert",
+        "tangier_unknown_bathroom"
+      ]
+    },
+    {
+      "traveler_id": "amina",
+      "eligible_trip_ids": [
+        "toubkal_hike",
+        "casablanca_weekend",
+        "ifrane_nature",
+        "tangier_unknown_bathroom"
+      ]
+    },
+    {
+      "traveler_id": "karim",
+      "eligible_trip_ids": [
+        "essaouira_riad",
+        "agadir_beach",
+        "rabat_city",
+        "toubkal_hike",
+        "chefchaouen_unknown",
+        "merzouga_assisted_desert",
+        "ouarzazate_desert",
+        "marrakech_luxury",
+        "casablanca_weekend",
+        "essaouira_january",
+        "tangier_unknown_bathroom"
+      ]
+    },
+    {
+      "traveler_id": "lina",
+      "eligible_trip_ids": [
+        "rabat_city"
+      ]
+    },
+    {
+      "traveler_id": "nour",
+      "eligible_trip_ids": []
+    },
+    {
+      "traveler_id": "omar",
+      "eligible_trip_ids": [
+        "essaouira_riad",
+        "agadir_beach",
+        "rabat_city",
+        "toubkal_hike",
+        "chefchaouen_unknown",
+        "fes_medina_partial",
+        "merzouga_assisted_desert",
+        "ouarzazate_desert",
+        "casablanca_weekend",
+        "tangier_unknown_bathroom"
+      ]
+    },
+    {
+      "traveler_id": "hafsa",
+      "eligible_trip_ids": [
+        "essaouira_riad",
+        "rabat_city",
+        "chefchaouen_unknown",
+        "fes_medina_partial"
+      ]
+    },
+    {
+      "traveler_id": "adil",
+      "eligible_trip_ids": [
+        "essaouira_riad",
+        "agadir_beach",
+        "rabat_city",
+        "tangier_unknown_bathroom"
+      ]
+    },
+    {
+      "traveler_id": "imane",
+      "eligible_trip_ids": [
+        "essaouira_riad"
+      ]
+    }
+  ]
+}

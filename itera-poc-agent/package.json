@@ -1,0 +1,19 @@
+{
+  "name": "itera-agent-poc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "test:llm": "node testLLM.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "openai": "^6.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

@@ -1,0 +1,536 @@
+{
+  "metadata": {
+    "note": "Synthetic university fixtures; baseline projection of supplied test package."
+  },
+  "agency_trip_listings": [
+    {
+      "id": "essaouira_riad",
+      "title": "Essaouira Accessible Riad",
+      "destination": "Essaouira",
+      "departure_city": "Casablanca",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-10",
+      "duration_days": 3,
+      "price_mad": 2500,
+      "activities": [
+        "beach",
+        "culture",
+        "relaxation"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "agadir_beach",
+      "title": "Agadir Accessible Beach Stay",
+      "destination": "Agadir",
+      "departure_city": "Rabat",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-12",
+      "duration_days": 4,
+      "price_mad": 3000,
+      "activities": [
+        "beach",
+        "relaxation",
+        "food"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "rabat_city",
+      "title": "Rabat Accessible City Tour",
+      "destination": "Rabat",
+      "departure_city": "Casablanca",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-15",
+      "duration_days": 2,
+      "price_mad": 1800,
+      "activities": [
+        "culture",
+        "history",
+        "museums"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "toubkal_hike",
+      "title": "Toubkal Rough Terrain Hike",
+      "destination": "Toubkal",
+      "departure_city": "Marrakech",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-12",
+      "duration_days": 3,
+      "price_mad": 1200,
+      "activities": [
+        "hiking",
+        "adventure",
+        "nature"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "no",
+        "accessible_bathroom": "no",
+        "step_free_transport": "no",
+        "assistance_available": "no"
+      }
+    },
+    {
+      "id": "chefchaouen_unknown",
+      "title": "Chefchaouen Unverified Access",
+      "destination": "Chefchaouen",
+      "departure_city": "Fes",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-11",
+      "duration_days": 3,
+      "price_mad": 1900,
+      "activities": [
+        "culture",
+        "photography",
+        "nature"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "unknown",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "unknown",
+        "assistance_available": "unknown"
+      }
+    },
+    {
+      "id": "fes_medina_partial",
+      "title": "Fes Medina Walking Tour",
+      "destination": "Fes",
+      "departure_city": "Casablanca",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-08",
+      "duration_days": 2,
+      "price_mad": 1600,
+      "activities": [
+        "culture",
+        "history",
+        "food"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "no",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "no",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "merzouga_assisted_desert",
+      "title": "Merzouga Desert with Assistance",
+      "destination": "Merzouga",
+      "departure_city": "Marrakech",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-20",
+      "duration_days": 4,
+      "price_mad": 3400,
+      "activities": [
+        "desert",
+        "culture",
+        "stargazing"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "no",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "no",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "ouarzazate_desert",
+      "title": "Ouarzazate Accessible Desert Tour",
+      "destination": "Ouarzazate",
+      "departure_city": "Casablanca",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-18",
+      "duration_days": 3,
+      "price_mad": 4000,
+      "activities": [
+        "desert",
+        "history",
+        "photography"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "marrakech_luxury",
+      "title": "Marrakech Luxury Getaway",
+      "destination": "Marrakech",
+      "departure_city": "Rabat",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-14",
+      "duration_days": 4,
+      "price_mad": 6000,
+      "activities": [
+        "culture",
+        "food",
+        "shopping"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "casablanca_weekend",
+      "title": "Casablanca Budget Weekend",
+      "destination": "Casablanca",
+      "departure_city": "Tangier",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-27",
+      "duration_days": 2,
+      "price_mad": 1450,
+      "activities": [
+        "city",
+        "shopping",
+        "food"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "no"
+      }
+    },
+    {
+      "id": "ifrane_nature",
+      "title": "Ifrane Nature Retreat",
+      "destination": "Ifrane",
+      "departure_city": "Fes",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-05",
+      "duration_days": 2,
+      "price_mad": 1100,
+      "activities": [
+        "nature",
+        "relaxation",
+        "photography"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "no",
+        "assistance_available": "no"
+      }
+    },
+    {
+      "id": "essaouira_january",
+      "title": "Essaouira January Beach Break",
+      "destination": "Essaouira",
+      "departure_city": "Casablanca",
+      "departure_country": "Morocco",
+      "start_date": "2027-01-10",
+      "duration_days": 3,
+      "price_mad": 2300,
+      "activities": [
+        "beach",
+        "relaxation"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "agadir_extended",
+      "title": "Agadir Extended Beach Stay",
+      "destination": "Agadir",
+      "departure_city": "Marrakech",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-09",
+      "duration_days": 8,
+      "price_mad": 3200,
+      "activities": [
+        "beach",
+        "relaxation",
+        "culture"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "malaga_foreign_departure",
+      "title": "Malaga Coastal Holiday",
+      "destination": "Malaga",
+      "departure_city": "Seville",
+      "departure_country": "Spain",
+      "start_date": "2026-12-12",
+      "duration_days": 3,
+      "price_mad": 2800,
+      "activities": [
+        "beach",
+        "culture",
+        "food"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "yes",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    },
+    {
+      "id": "tangier_unknown_bathroom",
+      "title": "Tangier History on a Budget",
+      "destination": "Tangier",
+      "departure_city": "Rabat",
+      "departure_country": "Morocco",
+      "start_date": "2026-12-16",
+      "duration_days": 2,
+      "price_mad": 1500,
+      "activities": [
+        "culture",
+        "history",
+        "photography"
+      ],
+      "source": "fictional_agency_listing",
+      "accessibility": {
+        "wheelchair_access": "yes",
+        "accessible_bathroom": "unknown",
+        "step_free_transport": "yes",
+        "assistance_available": "yes"
+      }
+    }
+  ],
+  "travelers": [
+    {
+      "id": "youssef",
+      "label": "Wheelchair user, mid budget, likes beaches",
+      "budget_max_mad": 3200,
+      "available_from": "2026-12-10",
+      "available_to": "2026-12-15",
+      "max_duration_days": 4,
+      "interests": [
+        "beach",
+        "relaxation"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": true,
+        "accessible_bathroom": true,
+        "step_free_transport": true,
+        "needs_assistance": false
+      }
+    },
+    {
+      "id": "salma",
+      "label": "Blind traveler requesting assistance",
+      "budget_max_mad": 4500,
+      "available_from": "2026-12-11",
+      "available_to": "2026-12-29",
+      "max_duration_days": 4,
+      "interests": [
+        "desert",
+        "stargazing",
+        "culture"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": false,
+        "step_free_transport": false,
+        "needs_assistance": true
+      }
+    },
+    {
+      "id": "amina",
+      "label": "Low-budget traveler (1,500 MAD)",
+      "budget_max_mad": 1500,
+      "available_from": "2026-12-01",
+      "available_to": "2026-12-31",
+      "max_duration_days": 4,
+      "interests": [
+        "hiking",
+        "nature",
+        "culture"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": false,
+        "step_free_transport": false,
+        "needs_assistance": false
+      }
+    },
+    {
+      "id": "karim",
+      "label": "Traveler with no accessibility needs (control)",
+      "budget_max_mad": 6500,
+      "available_from": "2026-12-10",
+      "available_to": "2027-01-15",
+      "max_duration_days": 9,
+      "interests": [
+        "culture",
+        "food",
+        "shopping"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": false,
+        "step_free_transport": false,
+        "needs_assistance": false
+      }
+    },
+    {
+      "id": "lina",
+      "label": "Traveler with a very short date window",
+      "budget_max_mad": 4500,
+      "available_from": "2026-12-15",
+      "available_to": "2026-12-16",
+      "max_duration_days": 2,
+      "interests": [
+        "culture",
+        "history"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": false,
+        "step_free_transport": false,
+        "needs_assistance": false
+      }
+    },
+    {
+      "id": "nour",
+      "label": "Traveler for whom no trip can qualify",
+      "budget_max_mad": 900,
+      "available_from": "2026-12-03",
+      "available_to": "2026-12-04",
+      "max_duration_days": 1,
+      "interests": [
+        "beach"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": true,
+        "accessible_bathroom": true,
+        "step_free_transport": true,
+        "needs_assistance": true
+      }
+    },
+    {
+      "id": "omar",
+      "label": "Traveler with many interests",
+      "budget_max_mad": 5000,
+      "available_from": "2026-12-07",
+      "available_to": "2026-12-28",
+      "max_duration_days": 4,
+      "interests": [
+        "culture",
+        "history",
+        "photography",
+        "food",
+        "beach",
+        "nature",
+        "relaxation"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": false,
+        "step_free_transport": false,
+        "needs_assistance": false
+      }
+    },
+    {
+      "id": "hafsa",
+      "label": "Accessible bathroom must be verified",
+      "budget_max_mad": 2500,
+      "available_from": "2026-12-08",
+      "available_to": "2026-12-18",
+      "max_duration_days": 3,
+      "interests": [
+        "culture",
+        "history",
+        "photography"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": true,
+        "step_free_transport": false,
+        "needs_assistance": false
+      }
+    },
+    {
+      "id": "adil",
+      "label": "Step-free transport required",
+      "budget_max_mad": 3000,
+      "available_from": "2026-12-10",
+      "available_to": "2026-12-18",
+      "max_duration_days": 4,
+      "interests": [
+        "beach",
+        "relaxation"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": false,
+        "step_free_transport": true,
+        "needs_assistance": false
+      }
+    },
+    {
+      "id": "imane",
+      "label": "Exact price and date-boundary test",
+      "budget_max_mad": 2500,
+      "available_from": "2026-12-10",
+      "available_to": "2026-12-12",
+      "max_duration_days": 3,
+      "interests": [
+        "beach",
+        "relaxation"
+      ],
+      "departure_country_required": "Morocco",
+      "needs": {
+        "wheelchair": false,
+        "accessible_bathroom": false,
+        "step_free_transport": false,
+        "needs_assistance": false
+      }
+    }
+  ]
+}
