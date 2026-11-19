@@ -15,7 +15,7 @@ while (true) {
   if (text.toLowerCase() === "exit") break;
 
   if (text.toLowerCase() === "confirm") {
-    const result = confirmListing(lastDraft, { confirmed: true });
+    const result = await createListing(history, { provider, previousDraft: lastDraft });
     console.log(result.published ? "\n✅ Published (PoC: not saved).\n" : `\n❌ Not published: ${result.reason}\n`);
     continue;
   }
