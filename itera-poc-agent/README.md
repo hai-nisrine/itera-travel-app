@@ -34,3 +34,13 @@ These tests use synthetic fixtures and mocked model responses, not real-model ev
 
 ## Dual-provider integration
 Both agents use callLLM with standard JSON Schema. OpenAI uses Responses API; Gemini uses generateContent. The smoke test checks known synthetic facts and unknown accessibility, token counts and latency. Model availability, dependency installation, existing mock compatibility and live calls remain unverified for this update. Earlier test counts do not apply to the new adapter.
+
+## Traveler-side schema correction (2026-11-19)
+
+The synthetic `data/Itera_PoC_15_Trips_10_Travelers.json` now stores 10 traveler fixtures as `{user, accessibility_profile, preferences, test_label}`. `user` and `accessibility_profile` use **only** fields from the provided PostgreSQL `users` and `accessibility_profiles` tables; `accessibility_profile.user_id` refers to `user.id`. `password_hash` contains **nonfunctional synthetic placeholders**, not real password hashes. These fixtures must not be inserted as actual credentials.
+
+`preferences` is **PoC-only input**, not part of either of those two tables. Budget, travel dates, duration, interests, and departure-country constraints have no supplied persistence schema. Do not add database columns without an explicit schema decision.
+
+The 15 pre-existing agency trip objects were not edited. Their accessibility flags still use older names. The traveler matcher recognizes `wheelchair_access` as a legacy synonym for `wheelchair_mobility_accessible` and requires exact explicit evidence for the other six database boolean accommodations. It does **not** infer `visual_assistance` or `trained_personal_assistant` from the generic `assistance_available`. Former bathroom/transport/unspecified-assistance requirements are retained in `additional_info` and **fail closed** pending a human-verified accommodation interpretation. Any nonempty `additional_info` currently blocks automated matching, which is deliberately conservative, not a complete natural-language solution.
+
+`data/Itera_PoC_Expected_Results.json` was regenerated for those safeguards. Run `npm run eval:traveler` to check deterministic matching and ranking without API keys; run `npm test` after `npm ci` for mock/HTTP tests. `eval:traveler` does not measure real AI quality or guarantee accessible travel; all agency facts are synthetic and unverified.

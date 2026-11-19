@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "note": "Synthetic university fixtures; baseline projection of supplied test package."
+    "note": "Synthetic PoC. Agency listings are unchanged. Each traveler has exact users/accessibility_profiles column names; preferences are fixture-only (not PostgreSQL columns). Original bathroom/transport/unspecified assistance needs are retained in additional_info and are not silently mapped to other boolean columns."
   },
   "agency_trip_listings": [
     {
@@ -335,202 +335,382 @@
   ],
   "travelers": [
     {
-      "id": "youssef",
-      "label": "Wheelchair user, mid budget, likes beaches",
-      "budget_max_mad": 3200,
-      "available_from": "2026-12-10",
-      "available_to": "2026-12-15",
-      "max_duration_days": 4,
-      "interests": [
-        "beach",
-        "relaxation"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": true,
-        "accessible_bathroom": true,
-        "step_free_transport": true,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 1,
+        "name": "Youssef",
+        "email": "youssef@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-1",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 1,
+        "user_id": 1,
+        "wheelchair_mobility_accessible": true,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": "Additional requirements: accessible bathroom, step-free transport.",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 3200,
+        "available_from": "2026-12-10",
+        "available_to": "2026-12-15",
+        "max_duration_days": 4,
+        "interests": [
+          "beach",
+          "relaxation"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Wheelchair user, mid budget, likes beaches"
     },
     {
-      "id": "salma",
-      "label": "Blind traveler requesting assistance",
-      "budget_max_mad": 4500,
-      "available_from": "2026-12-11",
-      "available_to": "2026-12-29",
-      "max_duration_days": 4,
-      "interests": [
-        "desert",
-        "stargazing",
-        "culture"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": false,
-        "step_free_transport": false,
-        "needs_assistance": true
-      }
+      "user": {
+        "id": 2,
+        "name": "Salma",
+        "email": "salma@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-2",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 2,
+        "user_id": 2,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": "Requests assistance; type not specified in original fixture (requires clarification).",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 4500,
+        "available_from": "2026-12-11",
+        "available_to": "2026-12-29",
+        "max_duration_days": 4,
+        "interests": [
+          "desert",
+          "stargazing",
+          "culture"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Blind traveler requesting assistance"
     },
     {
-      "id": "amina",
-      "label": "Low-budget traveler (1,500 MAD)",
-      "budget_max_mad": 1500,
-      "available_from": "2026-12-01",
-      "available_to": "2026-12-31",
-      "max_duration_days": 4,
-      "interests": [
-        "hiking",
-        "nature",
-        "culture"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": false,
-        "step_free_transport": false,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 3,
+        "name": "Amina",
+        "email": "amina@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-3",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 3,
+        "user_id": 3,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": null,
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 1500,
+        "available_from": "2026-12-01",
+        "available_to": "2026-12-31",
+        "max_duration_days": 4,
+        "interests": [
+          "hiking",
+          "nature",
+          "culture"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Low-budget traveler (1,500 MAD)"
     },
     {
-      "id": "karim",
-      "label": "Traveler with no accessibility needs (control)",
-      "budget_max_mad": 6500,
-      "available_from": "2026-12-10",
-      "available_to": "2027-01-15",
-      "max_duration_days": 9,
-      "interests": [
-        "culture",
-        "food",
-        "shopping"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": false,
-        "step_free_transport": false,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 4,
+        "name": "Karim",
+        "email": "karim@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-4",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 4,
+        "user_id": 4,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": null,
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 6500,
+        "available_from": "2026-12-10",
+        "available_to": "2027-01-15",
+        "max_duration_days": 9,
+        "interests": [
+          "culture",
+          "food",
+          "shopping"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Traveler with no accessibility needs (control)"
     },
     {
-      "id": "lina",
-      "label": "Traveler with a very short date window",
-      "budget_max_mad": 4500,
-      "available_from": "2026-12-15",
-      "available_to": "2026-12-16",
-      "max_duration_days": 2,
-      "interests": [
-        "culture",
-        "history"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": false,
-        "step_free_transport": false,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 5,
+        "name": "Lina",
+        "email": "lina@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-5",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 5,
+        "user_id": 5,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": null,
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 4500,
+        "available_from": "2026-12-15",
+        "available_to": "2026-12-16",
+        "max_duration_days": 2,
+        "interests": [
+          "culture",
+          "history"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Traveler with a very short date window"
     },
     {
-      "id": "nour",
-      "label": "Traveler for whom no trip can qualify",
-      "budget_max_mad": 900,
-      "available_from": "2026-12-03",
-      "available_to": "2026-12-04",
-      "max_duration_days": 1,
-      "interests": [
-        "beach"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": true,
-        "accessible_bathroom": true,
-        "step_free_transport": true,
-        "needs_assistance": true
-      }
+      "user": {
+        "id": 6,
+        "name": "Nour",
+        "email": "nour@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-6",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 6,
+        "user_id": 6,
+        "wheelchair_mobility_accessible": true,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": "Requests assistance; type not specified in original fixture (requires clarification). Additional requirements: accessible bathroom, step-free transport.",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 900,
+        "available_from": "2026-12-03",
+        "available_to": "2026-12-04",
+        "max_duration_days": 1,
+        "interests": [
+          "beach"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Traveler for whom no trip can qualify"
     },
     {
-      "id": "omar",
-      "label": "Traveler with many interests",
-      "budget_max_mad": 5000,
-      "available_from": "2026-12-07",
-      "available_to": "2026-12-28",
-      "max_duration_days": 4,
-      "interests": [
-        "culture",
-        "history",
-        "photography",
-        "food",
-        "beach",
-        "nature",
-        "relaxation"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": false,
-        "step_free_transport": false,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 7,
+        "name": "Omar",
+        "email": "omar@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-7",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 7,
+        "user_id": 7,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": null,
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 5000,
+        "available_from": "2026-12-07",
+        "available_to": "2026-12-28",
+        "max_duration_days": 4,
+        "interests": [
+          "culture",
+          "history",
+          "photography",
+          "food",
+          "beach",
+          "nature",
+          "relaxation"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Traveler with many interests"
     },
     {
-      "id": "hafsa",
-      "label": "Accessible bathroom must be verified",
-      "budget_max_mad": 2500,
-      "available_from": "2026-12-08",
-      "available_to": "2026-12-18",
-      "max_duration_days": 3,
-      "interests": [
-        "culture",
-        "history",
-        "photography"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": true,
-        "step_free_transport": false,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 8,
+        "name": "Hafsa",
+        "email": "hafsa@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-8",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 8,
+        "user_id": 8,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": "Additional requirements: accessible bathroom.",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 2500,
+        "available_from": "2026-12-08",
+        "available_to": "2026-12-18",
+        "max_duration_days": 3,
+        "interests": [
+          "culture",
+          "history",
+          "photography"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Accessible bathroom must be verified"
     },
     {
-      "id": "adil",
-      "label": "Step-free transport required",
-      "budget_max_mad": 3000,
-      "available_from": "2026-12-10",
-      "available_to": "2026-12-18",
-      "max_duration_days": 4,
-      "interests": [
-        "beach",
-        "relaxation"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": false,
-        "step_free_transport": true,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 9,
+        "name": "Adil",
+        "email": "adil@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-9",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 9,
+        "user_id": 9,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": "Additional requirements: step-free transport.",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 3000,
+        "available_from": "2026-12-10",
+        "available_to": "2026-12-18",
+        "max_duration_days": 4,
+        "interests": [
+          "beach",
+          "relaxation"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Step-free transport required"
     },
     {
-      "id": "imane",
-      "label": "Exact price and date-boundary test",
-      "budget_max_mad": 2500,
-      "available_from": "2026-12-10",
-      "available_to": "2026-12-12",
-      "max_duration_days": 3,
-      "interests": [
-        "beach",
-        "relaxation"
-      ],
-      "departure_country_required": "Morocco",
-      "needs": {
-        "wheelchair": false,
-        "accessible_bathroom": false,
-        "step_free_transport": false,
-        "needs_assistance": false
-      }
+      "user": {
+        "id": 10,
+        "name": "Imane",
+        "email": "imane@example.test",
+        "phone_number": null,
+        "password_hash": "$synthetic-test-placeholder-not-a-real-hash-10",
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "accessibility_profile": {
+        "id": 10,
+        "user_id": 10,
+        "wheelchair_mobility_accessible": false,
+        "visual_assistance": false,
+        "deaf_sign_support": false,
+        "sensory_friendly": false,
+        "trained_personal_assistant": false,
+        "service_animal_support": false,
+        "medical_equipment_storage": false,
+        "additional_info": null,
+        "created_at": "2026-11-19T00:00:00",
+        "updated_at": "2026-11-19T00:00:00"
+      },
+      "preferences": {
+        "budget_max_mad": 2500,
+        "available_from": "2026-12-10",
+        "available_to": "2026-12-12",
+        "max_duration_days": 3,
+        "interests": [
+          "beach",
+          "relaxation"
+        ],
+        "departure_country_required": "Morocco"
+      },
+      "test_label": "Exact price and date-boundary test"
     }
   ]
 }

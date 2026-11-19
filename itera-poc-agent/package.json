@@ -8,7 +8,8 @@
     "test": "node --test",
     "test:llm": "node llm/testLLM.js",
     "chat": "node organizer/chatCLI.js",
-    "eval:listing": "node eval/runListing.js"
+    "eval:listing": "node eval/runListing.js",
+    "eval:traveler": "node eval/runTraveler.js"
   },
   "engines": {
     "node": ">=20"

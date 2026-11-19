@@ -12,8 +12,8 @@ test('HTTP fixture, baseline, no-match and invalid request workflows',async()=>{
   const base=`http://127.0.0.1:${port}`;
   const fixtures=await fetch(base+'/api/fixtures');assert.equal(fixtures.status,200);const data=await fixtures.json();assert.equal(data.trips.length,15);assert.equal(data.travelers.length,10);
   const post=body=>fetch(base+'/api/match',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  const match=await post({profile:data.travelers[0],useAI:false});assert.equal(match.status,200);const result=await match.json();assert.equal(result.mode,'deterministic_baseline');assert.deepEqual(result.recommendations.map(r=>r.trip.id).sort(),['agadir_beach','essaouira_riad']);
-  const noMatch=await post({profile:data.travelers.find(p=>p.id==='nour'),useAI:false});assert.deepEqual(await noMatch.json(),{mode:'no_matches',recommendations:[]});
+  const match=await post({profile:data.travelers.find(t=>t.user.name==='Karim'),useAI:false});assert.equal(match.status,200);const result=await match.json();assert.equal(result.mode,'deterministic_baseline');assert.deepEqual(result.recommendations.map(r=>r.trip.id).sort(),['casablanca_weekend','marrakech_luxury','tangier_unknown_bathroom']);
+  const noMatch=await post({profile:data.travelers.find(p=>p.user.name==='Nour'),useAI:false});assert.deepEqual(await noMatch.json(),{mode:'no_matches',recommendations:[]});
   const invalid=await fetch(base+'/api/listing',{method:'POST',body:JSON.stringify({history:[null]})});assert.equal(invalid.status,400);assert.equal((await invalid.json()).error,'Invalid conversation');
   assert.equal((await fetch(base+'/api/match',{method:'POST',body:'{'})).status,400);
   assert.equal((await fetch(base+'/missing')).status,404);

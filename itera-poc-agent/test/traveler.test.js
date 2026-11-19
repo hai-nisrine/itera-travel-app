@@ -1,51 +1,115 @@
-import test from 'node:test'; import assert from 'node:assert/strict'; import fs from 'node:fs';
-import {trips,travelers,filterTrips,baselineRank,validateRank} from '../traveler/core.js';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { trips, travelers, filterTrips, baselineRank, validateRank, validTraveler } from '../traveler/core.js';
+import { ACCESSIBILITY_FIELDS } from '../shared/accessibility.js';
 import { recommend } from '../traveler/recommend.js';
 
 const expected = JSON.parse(fs.readFileSync(new URL('../data/Itera_PoC_Expected_Results.json', import.meta.url), 'utf8')).tests;
+const copy = x => structuredClone(x);
+const get = name => travelers.find(t => t.user.name.toLowerCase() === name);
+const noNeedsTraveler = get('karim');
 
-test('fixture integrity', () => { assert.equal(trips.length, 15); assert.equal(travelers.length, 10); });
-for (const profile of travelers) {
-    test('hard-filter matches answer key: ' + profile.id, () => {
-        const answer = expected.find(x => x.traveler_id === profile.id); assert.ok(answer);
-        const actual = filterTrips(profile).map(x => x.id).sort(); assert.deepEqual(actual, [...answer.eligible_trip_ids].sort());
-        const ranked = baselineRank(profile, filterTrips(profile)); assert.ok(ranked.length <= 3);
-        assert.ok(ranked.every(x => actual.includes(x.id)));
-    });
-}
-test('reject unsafe LLM rank', () => { assert.throws(() => validateRank(['toubkal_hike'], filterTrips(travelers[0]))); });
-test('reject missing accessibility data', () => { assert.deepEqual(filterTrips({ ...travelers[0], needs: { ...travelers[0].needs, wheelchair: null } }), []); });
-
-test('reject invalid dates and nonpositive durations before ranking', () => {
-    const p = travelers[0], t = filterTrips(p)[0];
-    for (const patch of [{ duration_days: 0 }, { duration_days: -1 }, { price_mad: -1 }, { start_date: '2026-02-30' }, { start_date: '2026-12-1' }]) assert.deepEqual(filterTrips(p, [{ ...t, ...patch }]), []);
-    for (const patch of [{ max_duration_days: 0 }, { budget_max_mad: -1 }, { available_from: '2026-02-30' }, { available_to: '2026-13-01' }]) assert.deepEqual(filterTrips({ ...p, ...patch }, [t]), []);
+test('15 agency listings and 10 traveler records', () => {
+  assert.equal(trips.length, 15);
+  assert.equal(travelers.length, 10);
+  assert.equal(new Set(travelers.map(t => t.user.id)).size, 10);
 });
-test('every required accessibility feature fails closed on unknown data', () => {
-    const p = travelers[0], t = filterTrips(p)[0];
-    for (const [need, field] of Object.entries({ wheelchair: 'wheelchair_access', accessible_bathroom: 'accessible_bathroom', step_free_transport: 'step_free_transport', needs_assistance: 'assistance_available' })) {
-        for (const value of ['unknown', 'no', undefined]) assert.deepEqual(filterTrips({ ...p, needs: { ...p.needs, [need]: true } }, [{ ...t, accessibility: { ...t.accessibility, [field]: value } }]), []);
+test('traveler database objects contain exactly the schema columns', () => {
+  const userCols = ['id', 'name', 'email', 'phone_number', 'password_hash', 'created_at', 'updated_at'];
+  const profileCols = ['id', 'user_id', ...ACCESSIBILITY_FIELDS, 'additional_info', 'created_at', 'updated_at'];
+  for (const t of travelers) {
+    assert.deepEqual(Object.keys(t.user).sort(), userCols.sort());
+    assert.deepEqual(Object.keys(t.accessibility_profile).sort(), profileCols.sort());
+    assert.equal(t.user.id, t.accessibility_profile.user_id);
+    assert.equal(validTraveler(t), true);
+    assert.equal(Object.hasOwn(t.user, 'budget_max_mad'), false);
+    assert.equal(Object.hasOwn(t.accessibility_profile, 'needs'), false);
+  }
+});
+for (const traveler of travelers) {
+  test(`hard filters match answer key: ${traveler.user.name}`, () => {
+    const answer = expected.find(x => x.user_id === traveler.user.id);
+    assert.ok(answer);
+    const actual = filterTrips(traveler).map(x => x.id).sort();
+    assert.deepEqual(actual, [...answer.eligible_trip_ids].sort());
+    const ranked = baselineRank(traveler, filterTrips(traveler));
+    assert.ok(ranked.length <= 3);
+    assert.ok(ranked.every(x => actual.includes(x.id)));
+  });
+}
+test('missing and nonboolean accessibility fields fail closed', () => {
+  const t = copy(noNeedsTraveler);
+  for (const field of ACCESSIBILITY_FIELDS) {
+    const invalid = copy(t);
+    delete invalid.accessibility_profile[field];
+    assert.equal(validTraveler(invalid), false);
+    assert.deepEqual(filterTrips(invalid), []);
+    invalid.accessibility_profile[field] = null;
+    assert.deepEqual(filterTrips(invalid), []);
+  }
+});
+test('all 7 required accommodations reject unknown, no and missing agency evidence', () => {
+  const baseline = copy(noNeedsTraveler);
+  const trip = filterTrips(baseline)[0];
+  assert.ok(trip);
+  for (const field of ACCESSIBILITY_FIELDS) {
+    const traveler = copy(baseline);
+    traveler.accessibility_profile[field] = true;
+    const agencyField = field === 'wheelchair_mobility_accessible' ? 'wheelchair_access' : field;
+    for (const value of ['unknown', 'no', undefined]) {
+      const t = copy(trip);
+      if (value === undefined) delete t.accessibility[agencyField];
+      else t.accessibility[agencyField] = value;
+      assert.deepEqual(filterTrips(traveler, [t]), [], `${field}: ${value}`);
     }
+    const confirmed = copy(trip);
+    confirmed.accessibility[agencyField] = 'yes';
+    assert.equal(filterTrips(traveler, [confirmed]).length, 1);
+  }
 });
-test('rank validation rejects malformed, duplicate and excessive selections', () => {
-    const allowed = filterTrips(travelers[0]), id = allowed[0].id;
-    for (const ids of [null, {}, [1], [id, id], [id, id, id, id], ['invented']]) assert.throws(() => validateRank(ids, allowed));
-    assert.deepEqual(validateRank([id], allowed), [allowed[0]]);
+test('generic agency assistance does not prove visual or trained assistant support', () => {
+  const traveler = copy(noNeedsTraveler);
+  traveler.accessibility_profile.trained_personal_assistant = true;
+  assert.deepEqual(filterTrips(traveler), []);
+  traveler.accessibility_profile.trained_personal_assistant = false;
+  traveler.accessibility_profile.visual_assistance = true;
+  assert.deepEqual(filterTrips(traveler), []);
 });
-
-// Mocked traveler agent tests (moved from agent.test.js)
-async function withModel(t, answer, run) {
-    const llm = async () => ({ data: structuredClone(answer), usage: { input: 0, output: 0 }, provider: 'mock', model: 'mock', ms: 0 });
-    await run(llm);
-}
-test('mocked traveler rejects ineligible or malformed model selections', async t => {
-    for (const answer of [null, { ids: ['toubkal_hike'] }, { ids: ['invented'] }]) await withModel(t, answer, (llm) => assert.rejects(recommend(travelers[0], { llm }), /invalid or ineligible/));
+test('unstructured additional_info requirements are never silently ignored', () => {
+  const traveler = copy(noNeedsTraveler);
+  traveler.accessibility_profile.additional_info = 'Requires accessible bathroom';
+  assert.deepEqual(filterTrips(traveler), []);
 });
-test('mocked traveler returns only verified eligible listings', async t => {
-    const allowed = filterTrips(travelers[0]);
-    await withModel(t, { ids: [allowed[0].id] }, async (llm) => { const r = await recommend(travelers[0], { llm }); assert.equal(r.mode, 'ai_ranked'); assert.deepEqual(r.recommendations[0].trip, allowed[0]); assert.match(r.recommendations[0].explanation, /MAD/); });
+test('reject invalid dates, negative prices and invalid durations', () => {
+  const t = copy(noNeedsTraveler), trip = filterTrips(t)[0];
+  for (const patch of [{ duration_days: 0 }, { duration_days: -1 }, { price_mad: -1 }, { start_date: '2026-02-30' }, { start_date: '2026-12-1' }]) {
+    assert.deepEqual(filterTrips(t, [{ ...trip, ...patch }]), []);
+  }
+  for (const patch of [{ max_duration_days: 0 }, { budget_max_mad: -1 }, { available_from: '2026-02-30' }, { available_to: '2026-13-01' }]) {
+    assert.deepEqual(filterTrips({ ...t, preferences: { ...t.preferences, ...patch } }, [trip]), []);
+  }
 });
-test('baseline and no-match paths need no model', async () => {
-    assert.equal((await recommend(travelers[0], { useAI: false })).mode, 'deterministic_baseline');
-    assert.deepEqual(await recommend(travelers.find(p => p.id === 'nour')), { mode: 'no_matches', recommendations: [] });
+test('rank validation rejects invented, duplicate and excessive trip IDs', () => {
+  const allowed = filterTrips(noNeedsTraveler), id = allowed[0].id;
+  for (const ids of [null, {}, [1], [id, id], [id, id, id, id], ['invented']]) assert.throws(() => validateRank(ids, allowed));
+  assert.deepEqual(validateRank([id], allowed), [allowed[0]]);
+});
+test('mocked AI cannot recommend an ineligible trip', async () => {
+  for (const answer of [null, { ids: ['invented'] }, { ids: ['toubkal_hike'] }]) {
+    const llm = async () => ({ data: answer });
+    await assert.rejects(recommend(get('imane'), { llm }), /invalid or ineligible/);
+  }
+});
+test('mocked AI selects only eligible records', async () => {
+  const eligible = filterTrips(get('imane'));
+  const llm = async () => ({ data: { ids: [eligible[0].id] } });
+  const result = await recommend(get('imane'), { llm });
+  assert.equal(result.mode, 'ai_ranked');
+  assert.deepEqual(result.recommendations[0].trip, eligible[0]);
+  assert.match(result.recommendations[0].explanation, /MAD/);
+});
+test('deterministic ranking and no-match paths', async () => {
+  assert.equal((await recommend(get('karim'), { useAI: false })).mode, 'deterministic_baseline');
+  assert.deepEqual(await recommend(get('nour')), { mode: 'no_matches', recommendations: [] });
 });
