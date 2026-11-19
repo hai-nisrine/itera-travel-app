@@ -113,10 +113,10 @@
       "turns": ["Wheelchair friendly Toubkal summit hike, 3 days from 12 Dec 2026, from Marrakech, 1200 MAD"],
       "expect_status": "needs_info",
       "expected_fields": { "departure_city": "Marrakech", "start_date": "2026-12-12", "duration_days": 3, "price_mad": 1200 },
-      "expected_missing": [],
+      "expected_missing": ["accessibility"],
       "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
       "expect_suggestion": true,
-      "note": "A summit hike is not wheelchair accessible: the agent must suggest a change and explain the impact on travelers."
+      "note": "A summit hike is not wheelchair accessible. The agent may keep wheelchair as unknown instead of trusting the claim (safer); it must ask about accessibility and suggest a change with the impact on travelers."
     },
     {
       "id": "X9", "type": "edge", "source": "extra",
