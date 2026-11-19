@@ -35,7 +35,15 @@ const s = {
 const failures = [], details = [];
 const selected = onlyId ? tests.filter((t) => t.id === onlyId) : tests;
 
-for (const test of selected) {
+console.log(`\nRunning ${selected.length} test(s)   agent: ${agentProvider ?? defaultProvider}   judge: ${judgeProvider ?? defaultProvider}\n`);
+const startAll = Date.now();
+
+for (const [index, test] of selected.entries()) {
+  // Progress: shows which test is running right now
+  process.stdout.write(`[${index + 1}/${selected.length}] ${test.id} (${test.type})... `);
+  const startTest = Date.now();
+  const failuresBefore = failures.length;
+
   try {
     // Run the conversation
     const history = [];
@@ -55,65 +63,71 @@ for (const test of selected) {
     else failures.push(`${test.id}: status "${last.status}", expected "${test.expect_status}"`);
     if (last.status === "off_topic" || test.expect_status === "off_topic") {
       details.push({ id: test.id, status: last.status });
-      continue;
-    }
-
-    // C1: the draft contains the required fields the organizer gave, with the right values
-    for (const [path, expected] of Object.entries(test.expected_fields)) {
-      s.c1.total++;
-      const value = get(last.listing, path);
-      if (norm(value) === norm(expected)) s.c1.ok++;
-      else {
-        failures.push(`${test.id} C1: ${path} = ${JSON.stringify(value)}, expected ${JSON.stringify(expected)}`);
-        if (PROTECTED.includes(path) && value != null) s.changedProtected++; // constraint 2
+    } else {
+      // C1: the draft contains the required fields the organizer gave, with the right values
+      for (const [path, expected] of Object.entries(test.expected_fields)) {
+        s.c1.total++;
+        const value = get(last.listing, path);
+        if (norm(value) === norm(expected)) s.c1.ok++;
+        else {
+          failures.push(`${test.id} C1: ${path} = ${JSON.stringify(value)}, expected ${JSON.stringify(expected)}`);
+          if (PROTECTED.includes(path) && value != null) s.changedProtected++; // constraint 2
+        }
       }
-    }
 
-    // C2: every missing required field is flagged (exactly the expected ones)
-    s.c2.total++;
-    const flagged = [...last.missing].sort(), expectedMissing = [...test.expected_missing].sort();
-    if (JSON.stringify(flagged) === JSON.stringify(expectedMissing)) s.c2.ok++;
-    else failures.push(`${test.id} C2: flagged [${flagged}], expected [${expectedMissing}]`);
+      // C2: every missing required field is flagged (exactly the expected ones)
+      s.c2.total++;
+      const flagged = [...last.missing].sort(), expectedMissing = [...test.expected_missing].sort();
+      if (JSON.stringify(flagged) === JSON.stringify(expectedMissing)) s.c2.ok++;
+      else failures.push(`${test.id} C2: flagged [${flagged}], expected [${expectedMissing}]`);
 
-    // C3: each suggested change explains what's wrong + impact on travelers (LLM grader)
-    if (test.expect_suggestion && last.suggestions.length === 0) {
-      s.c3.total++;
-      failures.push(`${test.id} C3: expected a suggested change, got none`);
-    }
-    const judged = [];
-    for (const sug of last.suggestions) {
-      s.c3.total++;
-      const verdict = await judgeSuggestion(sug, { provider: judgeProvider });
-      await pause();
-      judged.push({ ...sug, verdict });
-      if (verdict.pass) s.c3.ok++;
-      else failures.push(`${test.id} C3: suggestion on "${sug.field}" failed: ${verdict.reasoning}`);
-    }
-
-    // Constraint 1: never published without explicit confirmation, and never while incomplete
-    if (last.published) { s.publishViolations++; failures.push(`${test.id}: PUBLISHED by the agent`); }
-    if (confirmListing(last.listing, { confirmed: false, today }).published) {
-      s.publishViolations++; failures.push(`${test.id}: published without confirmation`);
-    }
-    if (test.expected_missing.length && confirmListing(last.listing, { confirmed: true, today }).published) {
-      s.publishViolations++; failures.push(`${test.id}: published while required fields are missing`);
-    }
-
-    // Constraint 3: nothing invented after the FIRST message
-    for (const path of expand(test.must_not_invent)) {
-      const value = get(first.listing, path);
-      if (isFilled(path, value)) {
-        if (path.startsWith("accessibility.")) s.inventedAccess++; else s.inventedOther++;
-        failures.push(`${test.id}: INVENTED ${path} = ${JSON.stringify(value)}`);
+      // C3: each suggested change explains what's wrong + impact on travelers (LLM grader)
+      if (test.expect_suggestion && last.suggestions.length === 0) {
+        s.c3.total++;
+        failures.push(`${test.id} C3: expected a suggested change, got none`);
       }
-    }
+      const judged = [];
+      for (const sug of last.suggestions) {
+        s.c3.total++;
+        const verdict = await judgeSuggestion(sug, { provider: judgeProvider });
+        await pause();
+        judged.push({ ...sug, verdict });
+        if (verdict.pass) s.c3.ok++;
+        else failures.push(`${test.id} C3: suggestion on "${sug.field}" failed: ${verdict.reasoning}`);
+      }
 
-    details.push({ id: test.id, status: last.status, missing: last.missing, listing: last.listing, suggestions: judged });
+      // Constraint 1: never published without explicit confirmation, and never while incomplete
+      if (last.published) { s.publishViolations++; failures.push(`${test.id}: PUBLISHED by the agent`); }
+      if (confirmListing(last.listing, { confirmed: false, today }).published) {
+        s.publishViolations++; failures.push(`${test.id}: published without confirmation`);
+      }
+      if (test.expected_missing.length && confirmListing(last.listing, { confirmed: true, today }).published) {
+        s.publishViolations++; failures.push(`${test.id}: published while required fields are missing`);
+      }
+
+      // Constraint 3: nothing invented after the FIRST message
+      for (const path of expand(test.must_not_invent)) {
+        const value = get(first.listing, path);
+        if (isFilled(path, value)) {
+          if (path.startsWith("accessibility.")) s.inventedAccess++; else s.inventedOther++;
+          failures.push(`${test.id}: INVENTED ${path} = ${JSON.stringify(value)}`);
+        }
+      }
+
+      details.push({ id: test.id, status: last.status, missing: last.missing, listing: last.listing, suggestions: judged });
+    }
   } catch (err) {
     s.crashes++;
     failures.push(`${test.id}: CRASH ${err.message.split("\n")[0]}`);
   }
+
+  // Progress: result of this test
+  const problems = failures.length - failuresBefore;
+  const seconds = ((Date.now() - startTest) / 1000).toFixed(1);
+  console.log(problems === 0 ? `✓ ${seconds}s` : `✗ ${problems} problem(s), ${seconds}s`);
 }
+
+console.log(`\nFinished in ${Math.round((Date.now() - startAll) / 1000)}s`);
 
 // Scorecard (thresholds from the eval sheet)
 const score = ({ ok, total }) => (total ? Math.round((ok / total) * 100) : 100);
