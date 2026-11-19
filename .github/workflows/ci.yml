@@ -77,3 +77,26 @@ jobs:
 
       - name: Run tests
         run: npm test
+        
+  agent:
+    name: Test AI Agent PoC (mocked, no API calls)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: itera-poc-agent
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
