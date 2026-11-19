@@ -41,10 +41,11 @@ function checkAIResponse(data) {
 
 /**
  * @param history  conversation so far: [{ role: "user" | "assistant", content }], last one from the organizer
- * @param options  today (YYYY-MM-DD), provider ("gemini" | "openai"), llm (inject a fake AI in tests)
+ * @param options  today (YYYY-MM-DD), provider ("gemini" | "openai"), llm (inject a fake AI in tests),
+ *                 previousDraft (the listing returned by the previous turn, so nothing gets forgotten)
  * @returns { status: "needs_info" | "ready" | "off_topic", listing, missing, suggestions, questions, published: false, usage }
  */
-export async function createListing(history, { today = new Date().toISOString().slice(0, 10), provider, llm = callLLM } = {}) {
+export async function createListing(history, { today = new Date().toISOString().slice(0, 10), provider, llm = callLLM, previousDraft = null } = {}) {
   checkHistory(history);
 
   const { data, usage } = await llm({
@@ -73,6 +74,7 @@ export async function createListing(history, { today = new Date().toISOString().
   listing.accessibility_notes ??= null;
   if (!Array.isArray(listing.itinerary)) listing.itinerary = [];
   if (!Array.isArray(listing.activities)) listing.activities = [];
+  keepPreviousValues(listing, previousDraft);
 
   const validation = validateListing(listing, today);
   // Flag EVERY missing required field (eval sheet C2)
@@ -89,6 +91,20 @@ export async function createListing(history, { today = new Date().toISOString().
 
   const status = missing.length === 0 && suggestions.length === 0 ? "ready" : "needs_info";
   return { status, listing, missing, suggestions, questions, published: false, usage };
+}
+
+// The AI sometimes "forgets" a value from an earlier turn (e.g. resets wheelchair to unknown when the
+// organizer only changes the price). Code fills those gaps from the previous draft. The AI can still CHANGE
+// a value; it just cannot silently drop one.
+const SCALAR_FIELDS = ["title", "destination", "departure_city", "start_date", "duration_days", "price_mad", "accessibility_notes"];
+function keepPreviousValues(listing, previous) {
+  if (!previous || typeof previous !== "object") return;
+  for (const f of SCALAR_FIELDS) if (listing[f] == null && previous[f] != null) listing[f] = previous[f];
+  for (const f of ["activities", "itinerary"])
+    if (listing[f].length === 0 && Array.isArray(previous[f]) && previous[f].length) listing[f] = previous[f];
+  for (const f of ACCESSIBILITY_FIELDS)
+    if (listing.accessibility[f] === "unknown" && ["yes", "no"].includes(previous.accessibility?.[f]))
+      listing.accessibility[f] = previous.accessibility[f];
 }
 
 // The text shown to the organizer (and stored as the "assistant" message)
