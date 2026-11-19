@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
-    "test:llm": "node testLLM.js"
+    "test:llm": "node llm/testLLM.js",
+    "chat": "node organizer/chatCLI.js",
+    "eval:listing": "node eval/runListing.js"
   },
   "engines": {
     "node": ">=20"
