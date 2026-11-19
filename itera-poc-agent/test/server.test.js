@@ -6,8 +6,8 @@ import {createServer} from 'node:net';
 
 test('HTTP fixture, baseline, no-match and invalid request workflows',async()=>{
  const probe=createServer();probe.listen(0,'127.0.0.1');await once(probe,'listening');const port=probe.address().port;await new Promise(resolve=>probe.close(resolve));
- const child=spawn(process.execPath,['server.js'],{cwd:new URL('.',import.meta.url),env:{...process.env,PORT:String(port)},stdio:['ignore','pipe','pipe']});
- try{
+ const child=spawn(process.execPath,['server.js'],{cwd:new URL('..',import.meta.url),env:{...process.env,PORT:String(port)},stdio:['ignore','pipe','pipe']});
+  try{
   await Promise.race([once(child.stdout,'data'),once(child,'exit').then(()=>{throw Error('Server exited before startup');}),new Promise((_,reject)=>{const timer=setTimeout(()=>reject(Error('Startup timeout')),5000);timer.unref();})]);
   const base=`http://127.0.0.1:${port}`;
   const fixtures=await fetch(base+'/api/fixtures');assert.equal(fixtures.status,200);const data=await fixtures.json();assert.equal(data.trips.length,15);assert.equal(data.travelers.length,10);
