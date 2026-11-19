@@ -1,0 +1,190 @@
+{
+  "metadata": {
+    "description": "Organizer agent test cases, following 'Evals for Agent Stories - Itera' section 2. Never send this file to the AI.",
+    "today": "2026-11-01",
+    "how_to_read": {
+      "type": "typical | edge | dont_know (same categories as the eval sheet)",
+      "source": "eval_sheet = test case from the sheet; extra = added for more coverage",
+      "turns": "Organizer messages, sent one after the other",
+      "expect_status": "Status after the LAST message: ready | needs_info | off_topic",
+      "expected_fields": "C1: values that must be in the final draft, unchanged. itinerary.length = number of days in the itinerary",
+      "expected_missing": "C2: required fields the agent must flag after the LAST message (exactly these). 'accessibility' = no accommodation confirmed",
+      "must_not_invent": "Constraint 3: fields the organizer did NOT state in the FIRST message. They must stay null / 'unknown'. 'accessibility' = all 7 fields",
+      "expect_suggestion": "C3: the agent must make at least one suggested change, and each one is graded by an LLM"
+    }
+  },
+  "tests": [
+    {
+      "id": "S1", "type": "typical", "source": "eval_sheet",
+      "turns": ["4-day trip from Casablanca to Marrakech, Nov 10-13, 3,000 MAD, wheelchair-accessible hotel and transport. Day 1: arrival and hotel check-in. Day 2: guided medina tour. Day 3: Majorelle Garden. Day 4: Free morning, return to Casablanca."],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Marrakech", "departure_city": "Casablanca", "start_date": "2026-11-10", "duration_days": 4, "price_mad": 3000, "itinerary.length": 4, "accessibility.wheelchair_mobility_accessible": "yes" },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": false,
+      "note": "'hotel and transport' both map to wheelchair_mobility_accessible in our database, so only that field is yes."
+    },
+    {
+      "id": "S2", "type": "edge", "source": "eval_sheet",
+      "turns": ["3-day trip from Essaouira to Agadir, 2,000 MAD. Day 1: arrival. Day 2: Souk El Had. Day 3: Paradise valley, departure."],
+      "expect_status": "needs_info",
+      "expected_fields": { "destination": "Agadir", "departure_city": "Essaouira", "duration_days": 3, "price_mad": 2000, "itinerary.length": 3 },
+      "expected_missing": ["start_date", "accessibility"],
+      "must_not_invent": ["accessibility"],
+      "expect_suggestion": false,
+      "note": "The sheet only mentions accessibility, but no date is given either, so start_date must also be flagged. Publishing must be blocked."
+    },
+    {
+      "id": "S3", "type": "dont_know", "source": "eval_sheet",
+      "turns": ["2-day trip from Rabat to Ifrane, 2,500 MAD, fully accessible for all disabilities. Day 1: arrival and lake walk. Day 2: town tour and departure."],
+      "expect_status": "needs_info",
+      "expected_fields": { "destination": "Ifrane", "departure_city": "Rabat", "duration_days": 2, "price_mad": 2500, "itinerary.length": 2 },
+      "expected_missing": ["start_date", "accessibility"],
+      "must_not_invent": ["accessibility"],
+      "expect_suggestion": false,
+      "note": "'Fully accessible for all disabilities' must NOT set any field to yes; the agent asks which specific accommodations."
+    },
+    {
+      "id": "X1", "type": "typical", "source": "extra",
+      "turns": ["Essaouira Accessible Riad: 3 days starting 10 December 2026, leaving from Casablanca, 2500 MAD per person. Beach, culture and relaxation. Fully wheelchair accessible, visual assistance available, sign language guide on the trip, sensory-friendly quiet riad, trained personal assistant with the group, service animals welcome, fridge for medication."],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Essaouira", "departure_city": "Casablanca", "start_date": "2026-12-10", "duration_days": 3, "price_mad": 2500, "accessibility.wheelchair_mobility_accessible": "yes", "accessibility.visual_assistance": "yes", "accessibility.deaf_sign_support": "yes", "accessibility.sensory_friendly": "yes", "accessibility.trained_personal_assistant": "yes", "accessibility.service_animal_support": "yes", "accessibility.medical_equipment_storage": "yes" },
+      "expected_missing": [],
+      "must_not_invent": [],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X2", "type": "typical", "source": "extra",
+      "turns": ["Merzouga desert trip, 4 days from 20 Dec 2026, departing Marrakech, 3400dh per person, desert and stargazing. Not wheelchair accessible because of the sand. We have visual assistance and a trained personal assistant. No sign language."],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Merzouga", "departure_city": "Marrakech", "start_date": "2026-12-20", "duration_days": 4, "price_mad": 3400, "accessibility.wheelchair_mobility_accessible": "no", "accessibility.visual_assistance": "yes", "accessibility.deaf_sign_support": "no", "accessibility.trained_personal_assistant": "yes" },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.sensory_friendly", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X3", "type": "edge", "source": "extra",
+      "turns": ["trip to chefchaouen from fes, 3 days, cheap"],
+      "expect_status": "needs_info",
+      "expected_fields": { "destination": "Chefchaouen", "departure_city": "Fes", "duration_days": 3 },
+      "expected_missing": ["start_date", "price_mad", "accessibility"],
+      "must_not_invent": ["start_date", "price_mad", "accessibility"],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X4", "type": "edge", "source": "extra",
+      "turns": ["Hello, we want to post a new trip on Itera"],
+      "expect_status": "needs_info",
+      "expected_fields": {},
+      "expected_missing": ["destination", "departure_city", "start_date", "duration_days", "price_mad", "accessibility"],
+      "must_not_invent": ["destination", "departure_city", "start_date", "duration_days", "price_mad", "accessibility"],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X5", "type": "dont_know", "source": "extra",
+      "turns": ["Accessible desert trip to Merzouga, 2 days from 5 January 2027, leaving Ouarzazate, 2000 MAD"],
+      "expect_status": "needs_info",
+      "expected_fields": { "destination": "Merzouga", "departure_city": "Ouarzazate", "start_date": "2027-01-05", "duration_days": 2, "price_mad": 2000 },
+      "expected_missing": ["accessibility"],
+      "must_not_invent": ["accessibility"],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X6", "type": "dont_know", "source": "extra",
+      "turns": ["Disabled-friendly city tour in Rabat, 2 days from 15 Dec 2026, from Casablanca, 1800 dh"],
+      "expect_status": "needs_info",
+      "expected_fields": { "destination": "Rabat", "departure_city": "Casablanca", "start_date": "2026-12-15", "duration_days": 2, "price_mad": 1800 },
+      "expected_missing": ["accessibility"],
+      "must_not_invent": ["accessibility"],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X7", "type": "typical", "source": "extra",
+      "turns": ["Tangier weekend, 2 days from 16 Dec 2026, from Tetouan, 1500 MAD, culture and food. Guide dogs are welcome."],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Tangier", "departure_city": "Tetouan", "start_date": "2026-12-16", "price_mad": 1500, "accessibility.service_animal_support": "yes" },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.wheelchair_mobility_accessible", "accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": false,
+      "note": "Guide dogs welcome = service_animal_support only. It does NOT mean visual assistance is provided."
+    },
+    {
+      "id": "X8", "type": "edge", "source": "extra",
+      "turns": ["Wheelchair friendly Toubkal summit hike, 3 days from 12 Dec 2026, from Marrakech, 1200 MAD"],
+      "expect_status": "needs_info",
+      "expected_fields": { "departure_city": "Marrakech", "start_date": "2026-12-12", "duration_days": 3, "price_mad": 1200 },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": true,
+      "note": "A summit hike is not wheelchair accessible: the agent must suggest a change and explain the impact on travelers."
+    },
+    {
+      "id": "X9", "type": "edge", "source": "extra",
+      "turns": ["Fes medina tour on 1 October 2026, 2 days, from Casablanca, 1600 MAD, wheelchair accessible"],
+      "expect_status": "needs_info",
+      "expected_fields": { "destination": "Fes", "departure_city": "Casablanca", "start_date": "2026-10-01", "price_mad": 1600 },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": true,
+      "note": "Date in the past: the agent must keep the date (not change it) and suggest a fix."
+    },
+    {
+      "id": "X10", "type": "edge", "source": "extra",
+      "turns": ["Marrakech day trip, 1 day on 12 Dec 2026, from Casablanca, 30 MAD per person, wheelchair accessible bus"],
+      "expect_status": "needs_info",
+      "expected_fields": { "destination": "Marrakech", "price_mad": 30, "start_date": "2026-12-12" },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": true,
+      "note": "30 MAD looks like a typo. The agent must NOT change it to 300 or 3000; it keeps 30 and suggests checking it."
+    },
+    {
+      "id": "X11", "type": "typical", "source": "extra",
+      "turns": ["salam!! so we were thinking maybe agadir?? beach + chill lol, 4 days starting 3rd jan 2027, 3k per person, leaving from rabat, the bus has a ramp and a lift"],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Agadir", "departure_city": "Rabat", "start_date": "2027-01-03", "duration_days": 4, "price_mad": 3000, "accessibility.wheelchair_mobility_accessible": "yes" },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X12", "type": "typical", "source": "extra",
+      "turns": ["Weekend in Fes starting this Saturday, 2 days, from Meknes, 1800 MAD, sign language guide included"],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Fes", "start_date": "2026-11-07", "duration_days": 2, "price_mad": 1800, "accessibility.deaf_sign_support": "yes" },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.wheelchair_mobility_accessible", "accessibility.visual_assistance", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": false,
+      "note": "Today is fixed to Sunday 2026-11-01, so 'this Saturday' = 2026-11-07."
+    },
+    {
+      "id": "X13", "type": "edge", "source": "extra",
+      "turns": ["What's the weather in Fes tomorrow?"],
+      "expect_status": "off_topic",
+      "expected_fields": {},
+      "expected_missing": [],
+      "must_not_invent": [],
+      "expect_suggestion": false
+    },
+    {
+      "id": "X14", "type": "typical", "source": "extra",
+      "turns": ["3 days in Ifrane from 5 Dec 2026, nature", "Leaving from Fes, 1100 MAD per person", "It is wheelchair accessible. No sign language support."],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Ifrane", "departure_city": "Fes", "start_date": "2026-12-05", "duration_days": 3, "price_mad": 1100, "accessibility.wheelchair_mobility_accessible": "yes", "accessibility.deaf_sign_support": "no" },
+      "expected_missing": [],
+      "must_not_invent": ["departure_city", "price_mad", "accessibility"],
+      "expect_suggestion": false,
+      "note": "Multi-turn: must_not_invent is checked after the FIRST message, everything else after the LAST."
+    },
+    {
+      "id": "X15", "type": "typical", "source": "extra",
+      "turns": ["Rabat city tour, 2 days from 15 Dec 2026, from Casablanca, 1800 MAD, wheelchair accessible", "Actually make the price 2000 MAD and it starts on 16 December instead"],
+      "expect_status": "ready",
+      "expected_fields": { "destination": "Rabat", "departure_city": "Casablanca", "start_date": "2026-12-16", "price_mad": 2000, "duration_days": 2, "accessibility.wheelchair_mobility_accessible": "yes" },
+      "expected_missing": [],
+      "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+      "expect_suggestion": false,
+      "note": "The organizer changes the price and date: the agent must use the NEW values."
+    }
+  ]
+}
