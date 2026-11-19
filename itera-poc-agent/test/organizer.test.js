@@ -126,3 +126,14 @@ test("schema is OpenAI strict-compatible: every object requires all keys and all
   };
   walk(AGENT_RESPONSE_SCHEMA);
 });
+
+test("values from the previous turn are kept when the AI forgets them, but can still be changed", async () => {
+  const previousDraft = aiAnswer().listing; // wheelchair yes, price 3000
+  const forgetful = aiAnswer({ listing: { price_mad: 2000, destination: null, accessibility: unknownAll() } });
+  const r = await createListing(history, { today: TODAY, llm: fakeLLM(forgetful), previousDraft });
+  assert.equal(r.listing.price_mad, 2000); // changed value wins
+  assert.equal(r.listing.destination, "Marrakech"); // forgotten value restored
+  assert.equal(r.listing.accessibility.wheelchair_mobility_accessible, "yes"); // forgotten value restored
+  assert.equal(r.listing.accessibility.visual_assistance, "unknown"); // never invented
+  assert.equal(r.status, "ready");
+});

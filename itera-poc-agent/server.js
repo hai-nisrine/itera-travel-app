@@ -27,10 +27,10 @@ const routes = {
     const result = await createListing(body.history);
     return [200, { ...result, reply: formatReply(result) }];
   },
-  // Organizer: publish. Body: { listing, confirmed: true } (only sent when the organizer presses Confirm)
-  "POST /api/listing/confirm": async (body) => {
-    const result = confirmListing(body.listing, { confirmed: body.confirmed });
-    return [result.published ? 201 : 400, result];
+   // Organizer: one chat turn. Body: { history: [{ role: "user" | "assistant", content }], draft (optional: previous listing) }
+  "POST /api/listing": async (body) => {
+    const result = await createListing(body.history, { previousDraft: body.draft ?? null });
+    return [200, { ...result, reply: formatReply(result) }];
   },
   // Traveler: recommendations. Body: { profile, useAI }
   "POST /api/match": async (body) => [200, await recommend(body.profile, { useAI: body.useAI !== false })],
