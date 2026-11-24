@@ -45,7 +45,7 @@ for (const [index, test] of selected.entries()) {
   const failuresBefore = failures.length;
 
   try {
-    // Run the conversationf
+    // Run the conversation
     const history = [];
     let first, last;
     for (const turn of test.turns) {
