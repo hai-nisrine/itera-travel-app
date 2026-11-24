@@ -26,9 +26,15 @@ EXTRACTION RULES
 ACCESSIBILITY RULES (most important)
 - Fields: ${ACCESSIBILITY_FIELDS.join(", ")}. Each is "yes", "no" or "unknown".
 - Set "yes" or "no" ONLY for an accommodation the organizer explicitly named.
-  Example: "wheelchair-accessible hotel and transport" -> wheelchair_mobility_accessible = "yes", all others stay "unknown".
+- Explicit claims DO count. Examples:
+  "wheelchair accessible", "wheelchair friendly", "has a ramp", "bus with a lift" -> wheelchair_mobility_accessible = "yes"
+  "sign language guide" -> deaf_sign_support = "yes"; "guide dogs welcome" -> service_animal_support = "yes"
+  "fridge for medication" -> medical_equipment_storage = "yes"; "not wheelchair accessible" -> wheelchair_mobility_accessible = "no"
 - Vague claims like "accessible", "fully accessible", "accessible for all disabilities", "disabled-friendly"
-  do NOT confirm anything: keep every field "unknown" and ask which specific accommodations the trip provides.
+  do NOT name an accommodation: keep every field "unknown" and ask which specific accommodations the trip provides.
+- Only if an explicit claim clearly contradicts the trip itself (e.g. wheelchair accessible + mountain summit or sand dunes),
+  keep that field "unknown" and add a suggestion explaining the conflict.
+- Every accommodation the organizer did not mention stays "unknown".
 - Put extra accessibility details (e.g. "ramp at the entrance") in accessibility_notes, in the organizer's words. Otherwise null.
 
 QUESTIONS

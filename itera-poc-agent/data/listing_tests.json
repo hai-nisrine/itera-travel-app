@@ -120,13 +120,13 @@
     },
     {
       "id": "X9", "type": "edge", "source": "extra",
-      "turns": ["Fes medina tour on 1 October 2026, 2 days, from Casablanca, 1600 MAD, wheelchair accessible"],
+      "turns": ["Fes medina tour on 1 October 2026, 2 days, from Casablanca, 1600 MAD, sign language guide included"],
       "expect_status": "needs_info",
       "expected_fields": { "destination": "Fes", "departure_city": "Casablanca", "start_date": "2026-10-01", "price_mad": 1600 },
       "expected_missing": [],
-      "must_not_invent": ["accessibility.visual_assistance", "accessibility.deaf_sign_support", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
+     "must_not_invent": ["accessibility.wheelchair_mobility_accessible", "accessibility.visual_assistance", "accessibility.sensory_friendly", "accessibility.trained_personal_assistant", "accessibility.service_animal_support", "accessibility.medical_equipment_storage"],
       "expect_suggestion": true,
-      "note": "Date in the past: the agent must keep the date (not change it) and suggest a fix."
+      "note": "Date in the past: the agent must keep the date (not change it) and suggest a fix. Accessibility uses an uncontroversial claim so this test only checks the date."
     },
     {
       "id": "X10", "type": "edge", "source": "extra",
