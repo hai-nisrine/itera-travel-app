@@ -51,7 +51,7 @@ const [notes, setNotes] = useState(initial?.additional_info || '')
 
   const res = await saveProfile(profile)
 
-  if (res.ok) navigate('/dashboard')
+  if (res.ok) navigate('/home')
 }
 
   return (

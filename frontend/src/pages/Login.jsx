@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import PageShell from '../components/PageShell.jsx'
 import AuthLayout from '../components/AuthLayout.jsx'
-import { useAuth } from '../context/AuthContext.jsx'
+import { useAuth, homeFor } from '../context/AuthContext.jsx'
 import loginHero from '../assets/login-hero.jpg'
 
 export default function Login() {
@@ -14,7 +14,7 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault()
     const res = await login({ email, password })
-    if (res.ok) navigate(res.user.profile ? '/dashboard' : '/accessibility-profile')
+    if (res.ok) navigate(homeFor(res.user.role))
   }
 
   return (
