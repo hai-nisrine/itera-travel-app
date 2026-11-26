@@ -69,27 +69,27 @@ jobs:
       DB_NAME: itera_test
 
     steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Setup Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: "22"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
-        - name: Install dependencies
-          run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-        - name: Apply migrations
-          working-directory: database
-          run: |
-            for f in $(ls *.sql | sort); do
-              echo "Running $f"
-              PGPASSWORD=itera_password psql -h localhost -U itera_user -d itera_test -v ON_ERROR_STOP=1 -f "$f"
-            done
+      - name: Apply migrations
+        working-directory: database
+        run: |
+          for f in $(ls *.sql | sort); do
+            echo "Running $f"
+            PGPASSWORD=itera_password psql -h localhost -U itera_user -d itera_test -v ON_ERROR_STOP=1 -f "$f"
+          done
 
-        - name: Run tests
-          run: npm test
+      - name: Run tests
+        run: npm test
 
   agent:
     name: Test AI Agent PoC (mocked, no API calls)
