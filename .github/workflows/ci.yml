@@ -52,7 +52,7 @@ jobs:
         env:
           POSTGRES_DB: itera_test
           POSTGRES_USER: itera_user
-          POSTGRES_PASSWORD: itera_password
+          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PW }}
         ports:
           - 5432:5432
         options: >-
@@ -65,7 +65,7 @@ jobs:
       DB_HOST: localhost
       DB_PORT: 5432
       DB_USER: itera_user
-      DB_PASSWORD: itera_password
+      DB_PASSWORD: ${{ secrets.CI_DB_PW }}
       DB_NAME: itera_test
 
     steps:
@@ -85,7 +85,7 @@ jobs:
         run: |
           for f in $(ls *.sql | sort); do
             echo "Running $f"
-            PGPASSWORD=itera_password psql -h localhost -U itera_user -d itera_test -v ON_ERROR_STOP=1 -f "$f"
+             PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f "$f"
           done
 
       - name: Run tests
